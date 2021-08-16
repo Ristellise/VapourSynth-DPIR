@@ -36,7 +36,7 @@ static const VSFrameRef* VS_CC processFrame(int n, int activationReason, void** 
       data->frameArray[(width * height * 2) + k] = src_b_plane[k];
     }
   }
-
+  data->semptr->acquire();
   auto value = torch::cat({torch::from_blob(data->frameArray.data(), {1, 3, height, width}), data->weights}, 1).to(*data->device);
 
   value = data->model->forward(value);
@@ -58,6 +58,6 @@ static const VSFrameRef* VS_CC processFrame(int n, int activationReason, void** 
   }
 
   vsapi->freeFrame(src);
-
+  data->semptr->release();
   return dest;
 }

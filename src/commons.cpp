@@ -15,6 +15,7 @@ struct FrameData {
   VSVideoInfo vinfo;
   torch::Device *device;
   torch::Tensor weights;
+  yamc::counting_semaphore<>* semptr;
   std::vector<float> frameArray;
   std::shared_ptr<UNetRes> model;
 };

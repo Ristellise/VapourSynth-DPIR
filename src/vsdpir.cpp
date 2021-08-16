@@ -41,7 +41,7 @@ static void VS_CC filterCreate(const VSMap *in, VSMap *out, void *userData, VSCo
 
   data.node = vsapi->propGetNode(in, "clip", 0, 0);
   data.vinfo = *vsapi->getVideoInfo(data.node);
-
+  data.semptr = new yamc::counting_semaphore<>(10);
   try {
     if (!checkClipFormat(data)) {
       throw std::string{"'clip' has to be constant RGB format and 32 bit float"};
@@ -61,7 +61,7 @@ static void VS_CC filterCreate(const VSMap *in, VSMap *out, void *userData, VSCo
 
     if (error) {
       strength = defaultStrength;
-    } else if (strength > 4096) {
+    } else if (strength > 4096.0) {
       throw std::string{"'strength' has to be <= 2 ** 12"};
     }
 
